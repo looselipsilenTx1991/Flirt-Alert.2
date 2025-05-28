@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>FlirtAlert</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .tab-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 44px;
+        }
+        
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .tab-btn:hover {
+            background: #cbd5e0;
+        }
+        
+        .tab-btn.active:hover {
+            background: #5a67d8;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-section {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            min-height: 44px;
+            transition: background 0.2s;
+        }
+        
+        button:hover {
+            background: #5a67d8;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .card-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+        
+        .card-body {
+            font-size: 14px;
+            color: #718096;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #718096;
+        }
+        
+        .positive {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+        
+        .negative {
+            color: #38a169;
+            font-weight: 600;
+        }
+        
+        .notification-card {
+            background: #fed7d7;
+            border: 2px solid #fc8181;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .notification-header {
+            font-weight: 600;
+            color: #c53030;
+            margin-bottom: 10px;
+        }
+        
+        .partner-list {
+            list-style-type: disc;
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: #667eea;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            padding: 8px 0;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin: 0;
+        }
+        
+        .info-box {
+            background: #ebf8ff;
+            border: 1px solid #90cdf4;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        @media (min-width: 640px) {
+            .container {
+                max-width: 600px;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .stats {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #718096;
+            margin-top: 30px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💕 FlirtAlert</h1>
+        
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('dashboard')">Dashboard</button>
+            <button class="tab-btn" onclick="showTab('partners')">Partners</button>
+            <button class="tab-btn" onclick="showTab('encounters')">Encounters</button>
+            <button class="tab-btn" onclick="showTab('tests')">Tests</button>
+            <button class="tab-btn" onclick="showTab('symptoms')">Symptoms</button>
+            <button class="tab-btn" onclick="showTab('notifications')">Alerts</button>
+            <button class="tab-btn" onclick="showTab('settings')">Settings</button>
+        </div>
+        
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <h2>Dashboard</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="partners-count">0</div>
+                    <div class="stat-label">Partners</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="encounters-count">0</div>
+                    <div class="stat-label">Encounters</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="tests-count">0</div>
+                    <div class="stat-label">Tests</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="symptoms-count">0</div>
+                    <div class="stat-label">Symptoms</div>
+                </div>
+            </div>
+            
+            <div id="notification-alert" class="hidden"></div>
+            
+            <h3>Recent Tests</h3>
+            <div id="recent-tests"></div>
+        </div>
+        
+        <!-- Partners Tab -->
+        <div id="partners" class="tab-content">
+            <h2>Partners</h2>
+            
+            <div class="form-section">
+                <h3>Add New Partner</h3>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="partner-name" placeholder="Partner name">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="partner-phone" placeholder="Phone number">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="partner-email" placeholder="Email address">
+                </div>
+                <button onclick="addPartner()">Add Partner</button>
+            </div>
+            
+            <div id="partners-list"></div>
+        </div>
+        
+        <!-- Encounters Tab -->
+        <div id="encounters" class="tab-content">
+            <h2>Encounters</h2>
+            
+            <div class="form-section">
+                <h3>Add New Encounter</h3>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="encounter-date">
+                </div>
+                <div class="form-group">
+                    <label>Partner</label>
+                    <select id="encounter-partner">
+                        <option value="">Select Partner</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Activities</label>
+                    <input type="text" id="encounter-activities" placeholder="e.g., oral, vaginal, anal">
+                </div>
+                <button onclick="addEncounter()">Add Encounter</button>
+            </div>
+            
+            <div id="encounters-list"></div>
+        </div>
+        
+        <!-- Tests Tab -->
+        <div id="tests" class="tab-content">
+            <h2>STI Tests</h2>
+            
+            <div class="form-section">
+                <h3>Add New Test</h3>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="test-date">
+                </div>
+                <div class="form-group">
+                    <label>Test Type</label>
+                    <select id="test-type" onchange="handleTestType()">
+                        <option value="">Select Test Type</option>
+                        <option value="HIV">HIV</option>
+                        <option value="Chlamydia">Chlamydia</option>
+                        <option value="Gonorrhea">Gonorrhea</option>
+                        <option value="Syphilis">Syphilis</option>
+                        <option value="Hepatitis B">Hepatitis B</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Result</label>
+                    <select id="test-result" onchange="handleTestResult()">
+                        <option value="negative">Negative</option>
+                        <option value="positive">Positive</option>
+                        <option value="inconclusive">Inconclusive</option>
+                    </select>
+                </div>
+                
+                <div id="syphilis-fields" class="hidden">
+                    <div class="form-group">
+                        <label>Syphilis Titer</label>
+                        <select id="syphilis-titer">
+                            <option value="">Select Titer</option>
+                            <option value="Non-reactive">Non-reactive</option>
+                            <option value="1:1">1:1</option>
+                            <option value="1:2">1:2</option>
+                            <option value="1:4">1:4</option>
+                            <option value="1:8">1:8</option>
+                            <option value="1:16">1:16</option>
+                            <option value="1:32">1:32</option>
+                            <option value="1:64">1:64</option>
+                            <option value="1:128">1:128</option>
+                        </select>
+                    </div>
+                    <div id="syphilis-stage-group" class="form-group hidden">
+                        <label>Syphilis Stage</label>
+                        <select id="syphilis-stage">
+                            <option value="">Select Stage</option>
+                            <option value="primary">Primary (lesion/chancre)</option>
+                            <option value="secondary">Secondary (rash)</option>
+                            <option value="early-latent">Early Latent</option>
+                            <option value="late-latent">Late Latent</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="treatment-fields" class="hidden">
+                    <div class="form-group">
+                        <label>Treatment Date</label>
+                        <input type="date" id="treatment-date">
+                    </div>
+                    <div class="form-group">
+                        <label>Treatment Details</label>
+                        <input type="text" id="treatment-details" placeholder="Medication, dosage">
+                    </div>
+                </div>
+                
+                <button onclick="addTest()">Add Test</button>
+            </div>
+            
+            <div id="tests-list"></div>
+        </div>
+        
+        <!-- Symptoms Tab -->
+        <div id="symptoms" class="tab-content">
+            <h2>Symptoms</h2>
+            
+            <div class="form-section">
+                <h3>Add New Symptom</h3>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="symptom-date">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="symptom-desc" placeholder="e.g., Discharge, Pain, Rash">
+                </div>
+                <div class="form-group">
+                    <label>Linked to STI</label>
+                    <select id="linked-sti">
+                        <option value="">None/Unknown</option>
+                        <option value="Syphilis">Syphilis</option>
+                        <option value="HIV">HIV</option>
+                        <option value="Chlamydia">Chlamydia</option>
+                        <option value="Gonorrhea">Gonorrhea</option>
+                    </select>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="symptom-resolved">
+                    <label for="symptom-resolved">Symptom has resolved</label>
+                </div>
+                <button onclick="addSymptom()">Add Symptom</button>
+            </div>
+            
+            <div id="symptoms-list"></div>
+        </div>
+        
+        <!-- Notifications Tab -->
+        <div id="notifications" class="tab-content">
+            <h2>Partner Notifications</h2>
+            <div id="notifications-list"></div>
+            
+            <div class="info-box">
+                <strong>Notification Guidelines:</strong><br>
+                • Positive tests: Notify based on STI-specific periods<br>
+                • Negative tests within incubation: Partners still need notification<br>
+                • Syphilis incubation: 90 days | HIV: 90 days | Chlamydia: 21 days | Gonorrhea: 14 days
+            </div>
+        </div>
+        
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <h2>Settings</h2>
+            
+            <div class="form-section">
+                <h3>Data Management</h3>
+                
+                <div style="margin-bottom: 15px;">
+                    <button onclick="exportData()" style="background: #38a169; margin-right: 10px;">📥 Export Data</button>
+                    <label for="import-file" class="btn-secondary" style="display: inline-block; padding: 12px 20px; cursor: pointer; border-radius: 8px;">📤 Import Data</label>
+                    <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importData(event)">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <p style="font-size: 14px; color: #718096; margin-bottom: 10px;">
+                        Export your data to backup or transfer to another device. Import previously exported data to restore your information.
+                    </p>
+                </div>
+                
+                <h3 style="color: #e53e3e; margin-top: 30px;">Danger Zone</h3>
+                <div style="border: 2px solid #fed7d7; padding: 15px; border-radius: 8px; background: #fef5e7;">
+                    <p style="font-size: 14px; margin-bottom: 15px; color: #744210;">
+                        <strong>⚠️ Warning:</strong> These actions cannot be undone!
+                    </p>
+                    
+                    <button onclick="clearAllData()" style="background: #e53e3e; margin-bottom: 10px;">🗑️ Delete All Data</button>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                        <button onclick="clearPartners()" class="btn-secondary" style="background: #fed7d7; color: #c53030;">Clear Partners</button>
+                        <button onclick="clearEncounters()" class="btn-secondary" style="background: #fed7d7; color: #c53030;">Clear Encounters</button>
+                        <button onclick="clearTests()" class="btn-secondary" style="background: #fed7d7; color: #c53030;">Clear Tests</button>
+                        <button onclick="clearSymptoms()" class="btn-secondary" style="background: #fed7d7; color: #c53030;">Clear Symptoms</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <strong>About FlirtAlert</strong><br>
+                Version 1.0 - Your private sexual health companion<br>
+                All data stored locally on your device for maximum privacy.
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>All data stored locally in your browser. No information transmitted to servers.</p>
+            <p>For personal use only. Not a substitute for professional medical advice.</p>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let partners = [];
+        let encounters = [];
+        let tests = [];
+        let symptoms = [];
+        let notifications = [];
+
+        // Load data from localStorage
+        function loadData() {
+            try {
+                const savedPartners = localStorage.getItem('flirt-partners');
+                const savedEncounters = localStorage.getItem('flirt-encounters');
+                const savedTests = localStorage.getItem('flirt-tests');
+                const savedSymptoms = localStorage.getItem('flirt-symptoms');
+                
+                if (savedPartners) partners = JSON.parse(savedPartners);
+                if (savedEncounters) encounters = JSON.parse(savedEncounters);
+                if (savedTests) tests = JSON.parse(savedTests);
+                if (savedSymptoms) symptoms = JSON.parse(savedSymptoms);
+                
+                generateNotifications();
+            } catch (e) {
+                console.log('Error loading data:', e);
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            try {
+                localStorage.setItem('flirt-partners', JSON.stringify(partners));
+                localStorage.setItem('flirt-encounters', JSON.stringify(encounters));
+                localStorage.setItem('flirt-tests', JSON.stringify(tests));
+                localStorage.setItem('flirt-symptoms', JSON.stringify(symptoms));
+                updateUI();
+            } catch (e) {
+                console.log('Error saving data:', e);
+            }
+        }
+
+        // Tab switching
+        function showTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Partner functions
+        function addPartner() {
+            const name = document.getElementById('partner-name').value.trim();
+            const phone = document.getElementById('partner-phone').value.trim();
+            const email = document.getElementById('partner-email').value.trim();
+            
+            if (!name) {
+                alert('Please enter a name');
+                return;
+            }
+            
+            const newPartner = {
+                id: Date.now().toString(),
+                name: name,
+                phone: phone,
+                email: email
+            };
+            
+            partners.push(newPartner);
+            saveData();
+            
+            // Clear form
+            document.getElementById('partner-name').value = '';
+            document.getElementById('partner-phone').value = '';
+            document.getElementById('partner-email').value = '';
+        }
+
+        // Encounter functions
+        function addEncounter() {
+            const date = document.getElementById('encounter-date').value;
+            const partnerId = document.getElementById('encounter-partner').value;
+            const activities = document.getElementById('encounter-activities').value.trim();
+            
+            if (!date || !partnerId) {
+                alert('Please select date and partner');
+                return;
+            }
+            
+            const newEncounter = {
+                id: Date.now().toString(),
+                date: date,
+                partnerId: partnerId,
+                activities: activities
+            };
+            
+            encounters.push(newEncounter);
+            saveData();
+            generateNotifications();
+            
+            // Clear form
+            document.getElementById('encounter-date').value = '';
+            document.getElementById('encounter-partner').value = '';
+            document.getElementById('encounter-activities').value = '';
+        }
+
+        // Test functions
+        function handleTestType() {
+            const testType = document.getElementById('test-type').value;
+            const syphilisFields = document.getElementById('syphilis-fields');
+            
+            if (testType === 'Syphilis') {
+                syphilisFields.classList.remove('hidden');
+            } else {
+                syphilisFields.classList.add('hidden');
+            }
+            
+            handleTestResult();
+        }
+
+        function handleTestResult() {
+            const testResult = document.getElementById('test-result').value;
+            const testType = document.getElementById('test-type').value;
+            const treatmentFields = document.getElementById('treatment-fields');
+            const stageGroup = document.getElementById('syphilis-stage-group');
+            
+            if (testResult === 'positive') {
+                treatmentFields.classList.remove('hidden');
+                if (testType === 'Syphilis') {
+                    stageGroup.classList.remove('hidden');
+                }
+            } else {
+                treatmentFields.classList.add('hidden');
+                if (stageGroup) stageGroup.classList.add('hidden');
+            }
+        }
+
+        function addTest() {
+            const date = document.getElementById('test-date').value;
+            const type = document.getElementById('test-type').value;
+            const result = document.getElementById('test-result').value;
+            
+            if (!date || !type) {
+                alert('Please enter date and test type');
+                return;
+            }
+            
+            const newTest = {
+                id: Date.now().toString(),
+                date: date,
+                type: type,
+                result: result,
+                titer: type === 'Syphilis' ? document.getElementById('syphilis-titer').value : '',
+                stage: (type === 'Syphilis' && result === 'positive') ? document.getElementById('syphilis-stage').value : '',
+                treatmentDate: result === 'positive' ? document.getElementById('treatment-date').value : '',
+                treatmentDetails: result === 'positive' ? document.getElementById('treatment-details').value : ''
+            };
+            
+            tests.push(newTest);
+            saveData();
+            generateNotifications();
+            
+            // Clear form
+            document.getElementById('test-date').value = '';
+            document.getElementById('test-type').value = '';
+            document.getElementById('test-result').value = 'negative';
+            document.getElementById('syphilis-titer').value = '';
+            document.getElementById('syphilis-stage').value = '';
+            document.getElementById('treatment-date').value = '';
+            document.getElementById('treatment-details').value = '';
+            document.getElementById('syphilis-fields').classList.add('hidden');
+            document.getElementById('treatment-fields').classList.add('hidden');
+        }
+
+        // Symptom functions
+        function addSymptom() {
+            const date = document.getElementById('symptom-date').value;
+            const description = document.getElementById('symptom-desc').value.trim();
+            const linkedSti = document.getElementById('linked-sti').value;
+            const resolved = document.getElementById('symptom-resolved').checked;
+            
+            if (!date || !description) {
+                alert('Please enter date and description');
+                return;
+            }
+            
+            const newSymptom = {
+                id: Date.now().toString(),
+                date: date,
+                description: description,
+                linkedToSti: linkedSti,
+                resolved: resolved
+            };
+            
+            symptoms.push(newSymptom);
+            saveData();
+            generateNotifications();
+            
+            // Clear form
+            document.getElementById('symptom-date').value = '';
+            document.getElementById('symptom-desc').value = '';
+            document.getElementById('linked-sti').value = '';
+            document.getElementById('symptom-resolved').checked = false;
+        }
+
+        // Delete functions
+        function deletePartner(id) {
+            if (confirm('Are you sure you want to delete this partner? This will also remove all encounters with them.')) {
+                partners = partners.filter(p => p.id !== id);
+                // Also remove encounters with this partner
+                encounters = encounters.filter(e => e.partnerId !== id);
+                saveData();
+                generateNotifications();
+            }
+        }
+
+        function deleteEncounter(id) {
+            if (confirm('Are you sure you want to delete this encounter?')) {
+                encounters = encounters.filter(e => e.id !== id);
+                saveData();
+                generateNotifications();
+            }
+        }
+
+        function deleteTest(id) {
+            if (confirm('Are you sure you want to delete this test result?')) {
+                tests = tests.filter(t => t.id !== id);
+                saveData();
+                generateNotifications();
+            }
+        }
+
+        function deleteSymptom(id) {
+            if (confirm('Are you sure you want to delete this symptom record?')) {
+                symptoms = symptoms.filter(s => s.id !== id);
+                saveData();
+                generateNotifications();
+            }
+        }
+
+        // Bulk delete functions
+        function clearAllData() {
+            if (confirm('⚠️ WARNING: This will delete ALL your data permanently. Are you sure?')) {
+                if (confirm('This action cannot be undone. Type "DELETE" in the next prompt to confirm.')) {
+                    const confirmation = prompt('Type "DELETE" to confirm deletion of all data:');
+                    if (confirmation === 'DELETE') {
+                        partners = [];
+                        encounters = [];
+                        tests = [];
+                        symptoms = [];
+                        notifications = [];
+                        saveData();
+                        alert('All data has been deleted.');
+                    } else {
+                        alert('Deletion cancelled.');
+                    }
+                }
+            }
+        }
+
+        function clearPartners() {
+            if (confirm('Delete all partners and their encounters?')) {
+                partners = [];
+                encounters = []; // Clear encounters too since they reference partners
+                saveData();
+                generateNotifications();
+            }
+        }
+
+        function clearEncounters() {
+            if (confirm('Delete all encounter records?')) {
+                encounters = [];
+                saveData();
+                generateNotifications();
+            }
+        }
+
+        function clearTests() {
+            if (confirm('Delete all test results?')) {
+                tests = [];
+                saveData();
+                generateNotifications();
+            }
+        }
+
+        function clearSymptoms() {
+            if (confirm('Delete all symptom records?')) {
+                symptoms = [];
+                saveData();
+                generateNotifications();
+            }
+        }
+
+        // Export/Import functions
+        function exportData() {
+            try {
+                const data = {
+                    partners: partners,
+                    encounters: encounters,
+                    tests: tests,
+                    symptoms: symptoms,
+                    exportDate: new Date().toISOString(),
+                    version: '1.0'
+                };
+                
+                const dataStr = JSON.stringify(data, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `FlirtAlert_Export_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                alert('Data exported successfully!');
+            } catch (e) {
+                alert('Error exporting data: ' + e.message);
+            }
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    // Validate the imported data structure
+                    if (!importedData.partners || !importedData.encounters || !importedData.tests || !importedData.symptoms) {
+                        throw new Error('Invalid data format');
+                    }
+                    
+                    if (confirm('This will replace all current data. Are you sure?')) {
+                        partners = importedData.partners || [];
+                        encounters = importedData.encounters || [];
+                        tests = importedData.tests || [];
+                        symptoms = importedData.symptoms || [];
+                        
+                        saveData();
+                        generateNotifications();
+                        alert('Data imported successfully!');
+                    }
+                } catch (error) {
+                    alert('Error importing data: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset the file input
+            event.target.value = '';
+        }
+        function getPartnerName(id) {
+            const partner = partners.find(p => p.id === id);
+            return partner ? partner.name : 'Unknown';
+        }
+
+        function getIncubationPeriod(sti) {
+            const periods = {
+                'syphilis': 90,
+                'hiv': 90,
+                'chlamydia': 21,
+                'gonorrhea': 14
+            };
+            return periods[sti.toLowerCase()] || 30;
+        }
+
+        function getNotificationPeriod(sti, stage = '') {
+            if (sti.toLowerCase() === 'syphilis') {
+                if (stage === 'primary') return 90;
+                if (stage === 'secondary') return 210;
+                if (stage === 'early-latent') return 365;
+                return 1095;
+            }
+            if (sti.toLowerCase() === 'hiv') return 365;
+            if (sti.toLowerCase() === 'chlamydia' || sti.toLowerCase() === 'gonorrhea') return 60;
+            return 90;
+        }
+
+        // Generate notifications
+        function generateNotifications() {
+            notifications = [];
+            
+            tests.forEach(test => {
+                const testDate = new Date(test.date);
+                const incubationDays = getIncubationPeriod(test.type);
+                
+                if (test.result === 'positive') {
+                    handlePositiveTest(test, testDate);
+                } else if (test.result === 'negative') {
+                    handleNegativeTest(test, testDate, incubationDays);
+                }
+            });
+            
+            renderNotifications();
+        }
+
+        function handlePositiveTest(test, testDate) {
+            const lookbackDays = getNotificationPeriod(test.type, test.stage);
+            const startDate = new Date(testDate);
+            startDate.setDate(startDate.getDate() - lookbackDays);
+            
+            const relevantEncounters = encounters.filter(encounter => {
+                const encounterDate = new Date(encounter.date);
+                return encounterDate >= startDate && encounterDate <= testDate;
+            });
+            
+            addNotification(test, testDate, startDate, relevantEncounters, 'positive');
+        }
+
+        function handleNegativeTest(test, testDate, incubationDays) {
+            const startDate = new Date(testDate);
+            startDate.setDate(startDate.getDate() - incubationDays);
+            
+            const recentEncounters = encounters.filter(encounter => {
+                const encounterDate = new Date(encounter.date);
+                return encounterDate >= startDate && encounterDate < testDate;
+            });
+            
+            if (recentEncounters.length > 0) {
+                addNotification(test, testDate, startDate, recentEncounters, 'negative-incubation');
+            }
+        }
+
+        function addNotification(test, testDate, startDate, relevantEncounters, type) {
+            const partnerIds = [...new Set(relevantEncounters.map(e => e.partnerId))];
+            const partnersToNotify = partnerIds.map(id => {
+                const partner = partners.find(p => p.id === id);
+                return partner || { id, name: 'Unknown' };
+            });
+            
+            if (partnersToNotify.length > 0) {
+                notifications.push({
+                    testId: test.id,
+                    testDate: test.date,
+                    stiType: test.type,
+                    stage: test.stage,
+                    titer: test.titer,
+                    startDate: startDate.toISOString().split('T')[0],
+                    partners: partnersToNotify,
+                    notificationType: type
+                });
+            }
+        }
+
+        // Render functions
+        function updateUI() {
+            renderDashboard();
+            renderPartners();
+            renderEncounters();
+            renderTests();
+            renderSymptoms();
+            renderNotifications();
+            updatePartnerDropdown();
+        }
+
+        function renderDashboard() {
+            document.getElementById('partners-count').textContent = partners.length;
+            document.getElementById('encounters-count').textContent = encounters.length;
+            document.getElementById('tests-count').textContent = tests.length;
+            document.getElementById('symptoms-count').textContent = symptoms.length;
+            
+            // Show notification alert
+            const alertEl = document.getElementById('notification-alert');
+            if (notifications.length > 0) {
+                alertEl.classList.remove('hidden');
+                alertEl.className = 'notification-card';
+                alertEl.innerHTML = `
+                    <div class="notification-header">⚠️ ${notifications.length} Notification${notifications.length > 1 ? 's' : ''} Required</div>
+                    <p>You have partner notifications that need attention.</p>
+                    <button onclick="showTab('notifications')" style="margin-top: 10px;">View Notifications</button>
+                `;
+            } else {
+                alertEl.classList.add('hidden');
+            }
+            
+            // Recent tests
+            const recentTestsEl = document.getElementById('recent-tests');
+            if (tests.length === 0) {
+                recentTestsEl.innerHTML = '<div class="card">No tests recorded yet.</div>';
+            } else {
+                const recentTests = [...tests].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
+                recentTestsEl.innerHTML = recentTests.map(test => `
+                    <div class="card">
+                        <div class="card-header">${test.date} - ${test.type} - <span class="${test.result}">${test.result}</span></div>
+                        ${test.titer ? `<div class="card-body">Titer: ${test.titer}</div>` : ''}
+                        ${test.stage ? `<div class="card-body">Stage: ${test.stage}</div>` : ''}
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderPartners() {
+            const partnersListEl = document.getElementById('partners-list');
+            if (partners.length === 0) {
+                partnersListEl.innerHTML = '<div class="card">No partners added yet.</div>';
+            } else {
+                partnersListEl.innerHTML = partners.map(partner => `
+                    <div class="card">
+                        <div class="card-header">${partner.name}</div>
+                        <div class="card-body">
+                            ${partner.phone ? `Phone: ${partner.phone}<br>` : ''}
+                            ${partner.email ? `Email: ${partner.email}` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderEncounters() {
+            const encountersListEl = document.getElementById('encounters-list');
+            if (encounters.length === 0) {
+                encountersListEl.innerHTML = '<div class="card">No encounters recorded yet.</div>';
+            } else {
+                const sortedEncounters = [...encounters].sort((a, b) => new Date(b.date) - new Date(a.date));
+                encountersListEl.innerHTML = sortedEncounters.map(encounter => `
+                    <div class="card">
+                        <div class="card-header">${encounter.date} - ${getPartnerName(encounter.partnerId)}</div>
+                        ${encounter.activities ? `<div class="card-body">Activities: ${encounter.activities}</div>` : ''}
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderTests() {
+            const testsListEl = document.getElementById('tests-list');
+            if (tests.length === 0) {
+                testsListEl.innerHTML = '<div class="card">No tests recorded yet.</div>';
+            } else {
+                const sortedTests = [...tests].sort((a, b) => new Date(b.date) - new Date(a.date));
+                testsListEl.innerHTML = sortedTests.map(test => `
+                    <div class="card">
+                        <div class="card-header">${test.date} - ${test.type} - <span class="${test.result}">${test.result}</span></div>
+                        <div class="card-body">
+                            ${test.titer ? `Titer: ${test.titer}<br>` : ''}
+                            ${test.stage ? `Stage: ${test.stage}<br>` : ''}
+                            ${test.treatmentDate ? `Treated: ${test.treatmentDate}` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderSymptoms() {
+            const symptomsListEl = document.getElementById('symptoms-list');
+            if (symptoms.length === 0) {
+                symptomsListEl.innerHTML = '<div class="card">No symptoms recorded yet.</div>';
+            } else {
+                const sortedSymptoms = [...symptoms].sort((a, b) => new Date(b.date) - new Date(a.date));
+                symptomsListEl.innerHTML = sortedSymptoms.map(symptom => `
+                    <div class="card">
+                        <div class="card-header">${symptom.date} - ${symptom.description}</div>
+                        <div class="card-body">
+                            Status: ${symptom.resolved ? 'Resolved' : 'Active'}
+                            ${symptom.linkedToSti ? `<br>Linked to: ${symptom.linkedToSti}` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderNotifications() {
+            const notificationsListEl = document.getElementById('notifications-list');
+            if (notifications.length === 0) {
+                notificationsListEl.innerHTML = '<div class="card">No notifications required.</div>';
+            } else {
+                notificationsListEl.innerHTML = notifications.map(notification => {
+                    let header = `${notification.stiType} - `;
+                    if (notification.notificationType === 'positive') {
+                        header += `Positive on ${notification.testDate}`;
+                    } else {
+                        header += `Negative on ${notification.testDate} (Within Incubation)`;
+                    }
+                    
+                    return `
+                        <div class="notification-card">
+                            <div class="notification-header">${header}</div>
+                            <p><strong>Period:</strong> ${notification.startDate} to ${notification.testDate}</p>
+                            ${notification.notificationType === 'negative-incubation' ? 
+                                '<p><strong>Reason:</strong> Test taken within incubation period - negative result doesn\'t rule out recent infection.</p>' : ''}
+                            <p><strong>Partners to Notify:</strong></p>
+                            <ul class="partner-list">
+                                ${notification.partners.map(partner => 
+                                    `<li>${partner.name}${partner.phone ? ` - ${partner.phone}` : ''}${partner.email ? ` - ${partner.email}` : ''}</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function updatePartnerDropdown() {
+            const partnerSelect = document.getElementById('encounter-partner');
+            partnerSelect.innerHTML = '<option value="">Select Partner</option>';
+            partners.forEach(partner => {
+                partnerSelect.innerHTML += `<option value="${partner.id}">${partner.name}</option>`;
+            });
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            updateUI();
+        });
+    </script>
+</body>
+</html>
